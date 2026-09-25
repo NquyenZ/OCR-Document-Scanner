@@ -84,7 +84,7 @@ The technology stack may change as the project develops
 Clone the repository:
 
 ```bash
-git clone <repository-url>
+git clone <https://github.com/NquyenZ/OCR-Document-Scanner>
 ```
 
 Enter the project directory:

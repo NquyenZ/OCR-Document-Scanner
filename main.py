@@ -1,0 +1,1 @@
+print("OCR Document Scanner runned successfully")
