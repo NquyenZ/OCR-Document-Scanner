@@ -1,1 +1,1 @@
-print("OCR Document Scanner runned successfully")
+print("OCR Document Scanner started successfully")
