@@ -66,6 +66,23 @@ def enhance_contrast(image_path):
     print(f"Enhanced image saved to {output_path}")
     return output_path
 
+def apply_threshold(image_path, threshold = 128):
+    image_path = Path(image_path)
+
+    base_stem = image_path.stem.removesuffix("_contrast")
+
+    output_path = image_path.parent / f"{base_stem}_threshold{image_path.suffix.lower()}"
+
+    if output_path.exists():
+        return output_path
+
+    with Image.open(image_path) as image:
+        binary_image = image.point(lambda pixel: 255 if pixel > threshold else 0)
+
+        binary_image.save(output_path)
+    print(f"Thresholded image saved to {output_path}")
+    return output_path
+
 def show_image_info(image_path):
     with Image.open(image_path) as image:
         image_format = image.format
@@ -82,3 +99,4 @@ if validate_image(image_path):
 
     processed_image_path = convert_to_grayscale(image_path)
     processed_image_path = enhance_contrast(processed_image_path)
+    processed_image_path = apply_threshold(processed_image_path)
