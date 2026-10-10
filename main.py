@@ -1,7 +1,11 @@
 from pathlib import Path
 from PIL import Image, UnidentifiedImageError, ImageEnhance
+from paddleocr import PaddleOCR
 
 SUPPORTED_EXTENSIONS = [".jpg", ".jpeg", ".png"]
+
+ocr = PaddleOCR(lang = "en", use_doc_orientation_classify = False,
+    use_doc_unwarping = False, use_textline_orientation = False, device = "cpu")
 
 def validate_image(image_path):
     image_path = Path(image_path)
@@ -83,6 +87,26 @@ def apply_threshold(image_path, threshold = 128):
     print(f"Thresholded image saved to {output_path}")
     return output_path
 
+def extract_text(image_path, ocr):
+    image_path = Path(image_path)
+
+    all_texts = []
+
+    results = ocr.predict(str(image_path))
+
+    for result in results:
+        result_data = result.json
+
+        texts = result_data["res"]["rec_texts"]
+
+        all_texts.extend(texts)
+    extracted_text = "\n".join(all_texts)
+    
+    print("Extracted Text")
+    print("----------------")
+    print(extracted_text)
+    return extracted_text
+
 def show_image_info(image_path):
     with Image.open(image_path) as image:
         image_format = image.format
@@ -97,6 +121,7 @@ image_path = input("Enter Image Path: ")
 if validate_image(image_path):    
     show_image_info(image_path)
 
-    processed_image_path = convert_to_grayscale(image_path)
-    processed_image_path = enhance_contrast(processed_image_path)
-    processed_image_path = apply_threshold(processed_image_path)
+    # processed_image_path = convert_to_grayscale(image_path)
+    # processed_image_path = enhance_contrast(processed_image_path)
+    # processed_image_path = apply_threshold(processed_image_path)
+    extracted_text = extract_text(image_path, ocr)
